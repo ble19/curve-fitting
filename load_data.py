@@ -7,7 +7,7 @@ import datetime
 def load_dataset():
 
     #this selects the data we wish to compare from the batch files before rearranging them
-    dataset = 'C:\\Users\\blela\\OneDrive\\Documents\\learning_analysis\\hhblock_dataset\\daily_dataset'
+    dataset = 'dataset file path here'
     list_dailyselection = []
     for file in os.listdir(dataset):
         df_daily = pd.read_csv(dataset+'\\'+file)
