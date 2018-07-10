@@ -49,13 +49,13 @@ from sklearn.model_selection import cross_val_score
         SVR plot
         
 '''
-#filename = "C:\\Users\\blela\\OneDrive\\Documents\\learning_analysis\\hhblock_dataset"
+
 def check_none(indexminusone):
     if indexminusone is None:
         return True
 
 def load_dataset():
-    dataset = 'C:\\Users\\blela\\OneDrive\\Documents\\learning_analysis\\hhblock_dataset\\daily_dataset'
+    dataset = 'dataset file path here'
     list_dailyselection = []
     for file in os.listdir(dataset):
         df_daily = pd.read_csv(dataset+'\\'+file)
@@ -63,7 +63,7 @@ def load_dataset():
         list_dailyselection.append(df_daily_selection)
 
 
-    df_dailyselection = pd.concat(list_dailyselection, axis=0) #current memory error
+    df_dailyselection = pd.concat(list_dailyselection, axis=0) 
     df_dailyselection["day"] = pd.to_datetime(df_dailyselection["day"])
     df_count = df_dailyselection.groupby(["day"]).count()
 
@@ -165,6 +165,7 @@ def main():
             print("LR r2", lr2)
     lw = 1
     '''
+    #need to tweak the code here to visualize the results. Currently non-functional
     # this is where I'll show the plots to give a visual idea of what is going on 
     plt.plot(X_test, Y_test, color='darkorange', lw=lw, label='data')
     plt.plot(X_train, svr_ytrain, color='navy', lw=lw, label='RBF model')
