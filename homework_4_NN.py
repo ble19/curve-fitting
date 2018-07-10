@@ -282,7 +282,7 @@ def ReLu_prime(z):
 
 def load_mnist_data():
     # read csv uses the complete path
-    mnist_data = pd.read_csv('C:\\Users\\blela\\Downloads\\MNIST_HW4.csv')
+    mnist_data = pd.read_csv('dataset complete file path')
 
     training_data = []
     validation_data = []
