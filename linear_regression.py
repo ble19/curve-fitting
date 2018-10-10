@@ -3,7 +3,11 @@ import pandas as pd
 import math
 
 
-'''UPDATE THE CLASS TO LOOP THROUGH THE DATASET AND KEEP LOWEST ERROR SLOPE?INTERCEPT'''
+'''Implementation of a linear regression class base on scikit-learn's function. The linear model still needs to be
+tweaked for better performance, shape checking is missing, and for personal interest I'm not quite sure what shapes the coef
+and intercepts will be during execution. It would be good to document for debugging purposes'''
+
+'''To do: shape checking, not coef/intercept shapes during function execution, make sure ridge prediction is correct, to int or not int'''
 class linear_model:
     def __init__(self, ind_var=None, dep_var=None, function=None):
         self.ind_var = ind_var
