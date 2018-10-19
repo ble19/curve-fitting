@@ -3,7 +3,14 @@ import os
 import datetime
 
 '''this is the method that shapes the data from the kaggle daily dataset to a useable format to predict household power 
- consumption.'''
+ consumption.
+
+Input: the Kaggle daily dataset for household power usage.
+Output: A file which the transformed dataset ready for regression analysis.
+
+Notes: I used the dataset to play around with simple regression analysis but if you haven't looked around on the kaggle page for the
+dataset, there are interesting relationships to be explored including weather and government holidays.
+'''
 def load_dataset():
 
     #this selects the data we wish to compare from the batch files before rearranging them
