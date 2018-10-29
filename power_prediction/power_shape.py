@@ -7,7 +7,7 @@ import datetime
 def load_dataset():
 
     #this selects the data we wish to compare from the batch files before rearranging them
-    dataset = 'C:\\Users\\blela\\OneDrive\\Documents\\learning_analysis\\hhblock_dataset\\daily_dataset'
+    dataset = '\\hhblock_dataset\\daily_dataset' #file path
     list_dailyselection = []
     for file in os.listdir(dataset):
         df_daily = pd.read_csv(dataset+'\\'+file)
@@ -54,5 +54,5 @@ def load_dataset():
         reformatted_datalist.append(entrytable)
     result = pd.concat(reformatted_datalist)
 
-    result.to_csv('~/Documents/reformatted_data.csv')
+    result.to_csv('~/Documents/reformatted_data.csv') #save document so changes don't have to be made to base doc everytime
     return result
