@@ -7,3 +7,5 @@ predict the curve better. To that end I need to get a few more days worth of mea
 In order to get the data for that, I'll have to make a script that compares house IDs in power_shape with the new data. Only return data that matches and then run empty measurement filtering again to the get the final set. 
 
 ![alt text](https://user-images.githubusercontent.com/20343931/47660032-8f2f6900-db6c-11e8-98fb-3097fe212885.png)
+
+The most useful bits of experience was turning on the stateful setting for the model and adjusting the "window" of the data samples. Before that when I was experimenting with the lstm, I was underfitting very heavily. I'm hoping to get this and one other method for comparison going before I'm satisfied with my work on this problem.
