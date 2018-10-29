@@ -7,7 +7,7 @@ import tensorflow as tf
 import keras
 
 ''' TO DO LIST
-Increase the number of measurements per samplex'''
+handle the nonconvexity of the middle of the prediction'''
 
 def root_mean_squared_error(y_true, y_pred):
     return keras.backend.sqrt(keras.backend.mean(keras.backend.square(y_pred - y_true), axis=-1))
