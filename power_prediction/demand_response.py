@@ -3,11 +3,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.neural_network import MLPRegressor
+
 import tensorflow as tf
 import keras
 
 ''' TO DO LIST
-handle the nonconvexity of the middle of the prediction'''
+should have kept any answers from the training data, adjusted training data creation
+adjusted data seemed to have corrected initial curve discrepancies but the small amount of 
+hidden nodes seems to have cause underfitting to the nonlinear nature'''
 
 def root_mean_squared_error(y_true, y_pred):
     return keras.backend.sqrt(keras.backend.mean(keras.backend.square(y_pred - y_true), axis=-1))
@@ -94,16 +97,16 @@ powerCurve_X = pd.DataFrame(scaled_power_X)
 
 #hyperparameters
 
-window_size = 576
-units = 30
+window_size = 528
+units = 10
 batch_size = 1
-epoch = 20
+epoch = 5
 '''This where I copy the data and copy it so that it iterates alone each data point in order to predict the next point
 effectively, which will take quite a bit more time. '''
 series = []
 answers = []
 series_copy = pd.DataFrame(powerCurve_X.values.flatten())
-for i in range(0, len(series_copy)-window_size*2):
+for i in range(0, len(series_copy)-((window_size*2)-1)):
         series.append(series_copy.iloc[i:i+window_size, ])
         answers.append(series_copy.iloc[i+window_size+1, ])
 
@@ -136,16 +139,16 @@ objectives = pd.DataFrame(objectives, columns=['min', 'max', 'min_time', 'max_ti
 #RNN-LSTM implementation: first model uses history to predict the next day
 #the next model will show a moving prediction scenario
 criteria = keras.callbacks.EarlyStopping(monitor='loss', patience= 24, baseline=100,  mode='auto', restore_best_weights=True) #min_delta=0,
-criteria1 = keras.callbacks.EarlyStopping(monitor='loss', patience=80, restore_best_weights=True)
+criteria1 = keras.callbacks.EarlyStopping(monitor='loss', patience=2, restore_best_weights=True, min_delta=.004)
 
 inputs = keras.Input(shape=(1, window_size, 1), batch_shape=(batch_size, window_size, 1))
 x = keras.layers.Dense(units, activation='sigmoid')(inputs)
 x = keras.layers.CuDNNLSTM(units, kernel_initializer='RandomNormal', return_sequences=True, unit_forget_bias=True, stateful=True)(x)
 x = keras.layers.CuDNNLSTM(units, return_sequences=True, stateful=True)(x)
 x = keras.layers.CuDNNLSTM(units, stateful=True)(x)
-outputs = keras.layers.Dense(1)(x)
+outputs = keras.layers.Dense(1, activation="tanh", activity_regularizer=keras.regularizers.l2(0.005))(x)
 model_LSTM = keras.models.Model(inputs, outputs)
-model_LSTM.compile(optimizer='adam', loss=root_mean_squared_error) #mean_absolute_percentage_error caterror worked
+model_LSTM.compile(optimizer='adam', loss=root_mean_squared_error) #'mean_absolute_percentage_error' caterror worked
 
 
 #lstm_input = np.array(powerCurve_X.values.flatten()).reshape(17472, 1)
