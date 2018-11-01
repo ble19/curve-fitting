@@ -167,7 +167,10 @@ powerCurve_y = dr_data.iloc[364, :]
 plt.plot(range(0, 48), powerCurve_y)
 plt.plot(range(0, 48), result)
 plt.show()
-#nonlinear regression
+
+#save model here
+
+#cross validate model here
 
 
 
