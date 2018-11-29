@@ -1,0 +1,97 @@
+from pyspark import SparkContext, SparkConf
+import pandas as pd
+import numpy as np
+import zipfile
+import seaborn as sns
+import elephas
+import io
+import matplotlib.pyplot as plt
+
+#%matplotlib inline
+
+#from sklearn.cluster import spectral_clustering
+#from scipy.misc import imread
+from mahotas.features import surf, haralick, zernike
+
+from sklearn.multiclass import OneVsRestClassifier
+
+def fill_targets(row):
+    row.Target = np.array(row.Target.split(" ")).astype(np.int)
+    for num in row.Target:
+        name = label_names[int(num)]
+        row.loc[name] = 1
+    return row
+
+sns.set()
+
+'''import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+warnings.filterwarnings("ignore", category=UserWarning)'''
+
+
+
+#conf = SparkConf().setAppName('Elephas_App').setMaster('local[8]')
+#sc = SparkContext(conf=conf)
+
+'''Below is initial code kindly provided by the Kaggle user allunia providing 
+a kernal for data exploration of the dataset'''
+#filepath = 'C:\\Users\\blela\\PycharmProjects\\kaggle_protein_identification\\train.csv'
+train_labels = pd.read_csv('section_kaggle.csv', sep = ',')
+
+label_names = {
+    0:  "Nucleoplasm",
+    1:  "Nuclear membrane",
+    2:  "Nucleoli",
+    3:  "Nucleoli fibrillar center",
+    4:  "Nuclear speckles",
+    5:  "Nuclear bodies",
+    6:  "Endoplasmic reticulum",
+    7:  "Golgi apparatus",
+    8:  "Peroxisomes",
+    9:  "Endosomes",
+    10:  "Lysosomes",
+    11:  "Intermediate filaments",
+    12:  "Actin filaments",
+    13:  "Focal adhesion sites",
+    14:  "Microtubules",
+    15:  "Microtubule ends",
+    16:  "Cytokinetic bridge",
+    17:  "Mitotic spindle",
+    18:  "Microtubule organizing center",
+    19:  "Centrosome",
+    20:  "Lipid droplets",
+    21:  "Plasma membrane",
+    22:  "Cell junctions",
+    23:  "Mitochondria",
+    24:  "Aggresome",
+    25:  "Cytosol",
+    26:  "Cytoplasmic bodies",
+    27:  "Rods & rings"
+}
+for key in label_names.keys():
+    train_labels[label_names[key]] = 0
+
+train_labels = train_labels.apply(fill_targets, axis=1)
+train_labels.head()
+
+reverse_train_labels = dict((v,k) for k,v in label_names.items())
+
+
+target_counts = train_labels.drop(["Id", "Target"],axis=1).sum(axis=0).sort_values(ascending=False)
+plt.figure(figsize=(15,15))
+sns.barplot(y=target_counts.index.values, x=target_counts.values, order=target_counts.index)
+#plt.show()
+# image_unprocessed =
+image_keys = pd.read_csv('section_kaggle.csv')
+zip_data = zipfile.ZipFile('train.zip', 'r')
+image_matrices = []
+for i in image_keys.iterrows():
+    regex_green = (i[1].Id) + r"_green.png"
+    imggreen = zip_data.read(regex_green)
+    #img_green = io.BytesIO(imggreen)
+    #print(np.size(imggreen))
+    green = np.frombuffer(imggreen, count=-1, dtype= np.uint8)
+    image_matrices.append(green)
+    # add rest of dataset building
+images_color = np.hstack(image_matrices)
+print(image_matrices)
