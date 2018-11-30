@@ -1,19 +1,15 @@
-from pyspark import SparkContext, SparkConf
 import pandas as pd
-import numpy as np
 import zipfile
-import seaborn as sns
-import elephas
-import io
+
+# from sklearn.cluster import spectral_clustering
+import imageio
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import mahotas.features
 
-#%matplotlib inline
-
-#from sklearn.cluster import spectral_clustering
-#from scipy.misc import imread
-from mahotas.features import surf, haralick, zernike
-
-from sklearn.multiclass import OneVsRestClassifier
+# %matplotlib inline
 
 def fill_targets(row):
     row.Target = np.array(row.Target.split(" ")).astype(np.int)
@@ -88,10 +84,17 @@ image_matrices = []
 for i in image_keys.iterrows():
     regex_green = (i[1].Id) + r"_green.png"
     imggreen = zip_data.read(regex_green)
-    #img_green = io.BytesIO(imggreen)
+    img_green = imageio.imread(imggreen)
+    image_green = np.reshape(img_green, (512, 512))
     #print(np.size(imggreen))
-    green = np.frombuffer(imggreen, count=-1, dtype= np.uint8)
-    image_matrices.append(green)
+    #green = np.frombuffer(imggreen, dtype= np.uint8).reshape(512, 512)
+    image_matrices.append([np.vstack(image_green), i[1].Target])
     # add rest of dataset building
-images_color = np.hstack(image_matrices)
-print(image_matrices)
+images = np.array(image_matrices)
+print(np.shape(images[0,0]))
+haralick_features = [mahotas.features.haralick(i) for i in images[i, 0]]
+zernike_features = [mahotas.features.zernike_moments(x, degree=3, radius=8) for x in images[0, :]]
+
+print(haralick_features)
+print(zernike_features)
+#debug zernike features where
